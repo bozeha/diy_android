@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_selector"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:background="#ffeeeade"
+        android:padding="3dp"
+
+        >
+
+        <ImageView
+            android:id="@+id/list_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+
+
+            ></ImageView>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:gravity="right"
+        android:text="Title"
+        android:textColor="@color/Red"
+        android:textDirection="rtl"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:gravity="right"
+        android:text="bob"
+        android:textColor="@color/colorPrimaryDark"
+        android:textDirection="rtl" />
+
+    <TextView
+        android:id="@+id/pages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="234 pages"
+        android:visibility="gone"
+
+        />
+
+    <TextView
+        android:id="@+id/get_item_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:height="100dp"
+        android:text="ddddddddddsdsdfasdfasdfdddddddddddddddd"
+        android:textColor="@color/Red"
+        android:visibility="gone" />
+</RelativeLayout>

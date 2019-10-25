@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">anrdoiJsonPrasing</string>
+    <string name="server_url">http://justdo.co.il/</string>
+</resources>
