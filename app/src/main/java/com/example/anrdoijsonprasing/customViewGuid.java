@@ -118,8 +118,8 @@ public class customViewGuid extends Fragment {
                 String current_steps = full_guid.get("steps").getString(loop);
                 switch (current_steps) {
                     case "textarea":
-                        String current_textarea = clearHtmlTags(full_guid.get("textarea").getString(loop_textarea));
-                        current_textarea = fixChars(current_textarea);
+                        String current_textarea = ((MainActivity)getActivity()).clearHtmlTags(full_guid.get("textarea").getString(loop_textarea));
+                        current_textarea = ((MainActivity) getActivity()).fixChars(current_textarea);
                         child.setText(current_textarea);
                         child.setTextSize(20);
                         child.setGravity(View.TEXT_ALIGNMENT_CENTER);
@@ -149,7 +149,7 @@ public class customViewGuid extends Fragment {
                                 }
                             });
                         }
-                        String current_text = fixChars(full_guid.get("texts").getString(loop_text_and_img));
+                        String current_text = ((MainActivity) getActivity()).fixChars(full_guid.get("texts").getString(loop_text_and_img));
                         child.setText(current_text);
                         child.setTextSize(20);
                         child.setGravity(View.TEXT_ALIGNMENT_CENTER);
@@ -169,7 +169,7 @@ public class customViewGuid extends Fragment {
                         break;
 
                     case "youtube":
-                        String current_video_path = fixChars(full_guid.get("videos").getString(loop_textarea));
+                        String current_video_path = ((MainActivity) getActivity()).fixChars(full_guid.get("videos").getString(loop_textarea));
 
                         if (current_video_path.contains("avi") || current_video_path.contains("mp4") || current_video_path.contains("flv")) {
                             current_video_path = ((MainActivity) getActivity()).fixImageUrl(current_video_path);
@@ -220,65 +220,8 @@ public class customViewGuid extends Fragment {
 
     }
 
-    public String clearHtmlTags(String old_sting) {
-
-        String output;
-        String regex_span = "<span([^>]+).";
-        String regex_p = "<p([^>]+).";
-        String regex_div = "<div([^>]+).";
-        String regex_li = "<li([^>]+).";
-        String regex_ul = "<ul([^>]+).";
-        String regex_ol = "<ol([^>]+).";
-        String regex_u = "<u([^>]+).";
-
-        //remove span
-        output = old_sting.replaceAll(regex_span, "");
-        output = output.replaceAll("</span>", "");
-
-        //remove p
-        output = output.replaceAll(regex_p, "");
-        output = output.replaceAll("</p>", "");
-        //remove div
-        output = output.replaceAll(regex_div, "");
-        output = output.replaceAll("</div>", "");
-        //remove li
-        output = output.replaceAll(regex_li, "* ");
-        output = output.replaceAll("</li>", "");
-        //remove ul
-        output = output.replaceAll(regex_ul, "");
-        output = output.replaceAll("</ul>", "");
-        //remove ol
-        output = output.replaceAll(regex_ol, "");
-        output = output.replaceAll("</ol>", "");
-        //remove u
-        output = output.replaceAll(regex_u, "");
-        output = output.replaceAll("</u>", "");
 
 
-        output = output.replaceAll("<u>", "");
-        output = output.replaceAll("<ol>", "");
-        output = output.replaceAll("<p>", "");
-        output = output.replaceAll("</br>", "");
-        output = output.replaceAll("<br>", "");
-
-
-        return output;
-    }
-
-    public String fixChars(String string_to_fix) {
-        string_to_fix = string_to_fix.replaceAll("&#41;", ")");
-        string_to_fix = string_to_fix.replaceAll("&#40;", "(");
-        string_to_fix = string_to_fix.replaceAll("&#39;", "'");
-        string_to_fix = string_to_fix.replaceAll("&#47;", "/");
-        string_to_fix = string_to_fix.replaceAll("&#44;", ",");
-        string_to_fix = string_to_fix.replaceAll("&#34;", "\"");
-        //string_to_fix = string_to_fix.replaceAll("<p>", "");
-        //string_to_fix = string_to_fix.replaceAll("</p>", "");
-        //string_to_fix = string_to_fix.replaceAll("<p/>", "");
-        string_to_fix = string_to_fix.replaceAll("&nbsp;", " ");
-
-        return string_to_fix;
-    }
 
     @Override
     public void onResume() {

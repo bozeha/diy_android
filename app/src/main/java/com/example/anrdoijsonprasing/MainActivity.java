@@ -27,6 +27,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -174,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         /// convert the array hash list to list view
-        customListViewAdapter = new customListViewAllGuides(getApplicationContext(), guidesList);
+        customListViewAdapter = new customListViewAllGuides(getApplicationContext(), guidesList, this);
 
         /// bind -> adapt the listView to the main activity xml list view
         listView.setAdapter(customListViewAdapter);
@@ -195,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-       // if (scrollY != -1) listView.setSelection(scrollY);
+        // if (scrollY != -1) listView.setSelection(scrollY);
     }
 
     public void startBuildGuid(/*String guid_id*/) {
@@ -320,17 +323,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public String fixImageUrl(String bad_string) {
-
-        String fixed_string = bad_string;
-        fixed_string = fixed_string.replaceAll("\\[", "");
-        fixed_string = fixed_string.replaceAll("]", "");
-        fixed_string = fixed_string.replaceAll("\\\\", "");
-        fixed_string = fixed_string.replaceAll("\\\"", "");
-        //  fixed_string = fixed_string.replaceAll("\\/", "\\");
-        fixed_string = "http://justdo.co.il/" + fixed_string;
-        return fixed_string;
-    }
 
     public void sendImageToFrontFragment(String img_src) {
 
@@ -355,8 +347,117 @@ public class MainActivity extends AppCompatActivity {
             main_list_view.setVisibility(View.VISIBLE);
 
             currentView = "LISTVIEW";
-          //  getJSON("http://justdo.co.il/android/return_guides_list.php");
+            //  getJSON("http://justdo.co.il/android/return_guides_list.php");
 
         }
+    }
+
+    public String fixChars(String string_to_fix) {
+        string_to_fix = string_to_fix.replaceAll("&#41;", ")");
+        string_to_fix = string_to_fix.replaceAll("&#40;", "(");
+        string_to_fix = string_to_fix.replaceAll("&#39;", "'");
+        string_to_fix = string_to_fix.replaceAll("&#47;", "/");
+        string_to_fix = string_to_fix.replaceAll("&#44;", ",");
+        string_to_fix = string_to_fix.replaceAll("&#34;", "\"");
+        //string_to_fix = string_to_fix.replaceAll("<p>", "");
+        //string_to_fix = string_to_fix.replaceAll("</p>", "");
+        //string_to_fix = string_to_fix.replaceAll("<p/>", "");
+        string_to_fix = string_to_fix.replaceAll("&nbsp;", " ");
+
+        return string_to_fix;
+    }
+
+    public String fixImageUrl(String bad_string) {
+
+        String fixed_string = bad_string;
+        fixed_string = fixed_string.replaceAll("\\[", "");
+        fixed_string = fixed_string.replaceAll("]", "");
+        fixed_string = fixed_string.replaceAll("\\\\", "");
+        fixed_string = fixed_string.replaceAll("\\\"", "");
+        //  fixed_string = fixed_string.replaceAll("\\/", "\\");
+        fixed_string = "http://justdo.co.il/" + fixed_string;
+        return fixed_string;
+    }
+
+    public String clearHtmlTags(String old_sting) {
+
+        String output;
+
+        String regex_a = "<a([^\\[>]+).*([<]).{3}";
+        String regex_span = "<span([^>]+).";
+        String regex_p = "<p([^>]+).";
+        String regex_div = "<div([^>]+).";
+        String regex_li = "<li([^>]+).";
+        String regex_ul = "<ul([^>]+).";
+        String regex_ol = "<ol([^>]+).";
+        String regex_u = "<u([^>]+).";
+
+
+        //remove span
+        output = old_sting.replaceAll(regex_span, "");
+        output = output.replaceAll("</span>", "");
+
+        //remove p
+        output = output.replaceAll(regex_p, "");
+        output = output.replaceAll("</p>", "");
+        //remove div
+        output = output.replaceAll(regex_div, "");
+        output = output.replaceAll("</div>", "");
+        //remove li
+        output = output.replaceAll(regex_li, "* ");
+        output = output.replaceAll("</li>", "");
+        //remove ul
+        output = output.replaceAll(regex_ul, "");
+        output = output.replaceAll("</ul>", "");
+        //remove ol
+        output = output.replaceAll(regex_ol, "");
+        output = output.replaceAll("</ol>", "");
+        //remove u
+        output = output.replaceAll(regex_u, "");
+        output = output.replaceAll("</u>", "");
+
+        //remove a
+
+
+        //
+        output = fixLinks(output);
+        output = output.replaceAll(regex_a, "***");
+
+
+        output = output.replaceAll("<u>", "");
+        output = output.replaceAll("<ol>", "");
+        output = output.replaceAll("<p>", "");
+        output = output.replaceAll("</br>", "");
+        output = output.replaceAll("<br>", "");
+
+
+        return output;
+    }
+
+    public String fixLinks(String input) {
+
+        List<String> allMatches = new ArrayList<String>();
+        int arraySize = 0;
+        Matcher m = Pattern.compile("<a([^\\[>]+).*([<]).{3}").matcher(input);
+        while (m.find()) {
+            allMatches.add(m.group());
+        }
+        String onlyUrlString = "";
+        for (String s : allMatches) {
+            String match_clean_url = "\"([^\\[>]+).*([\"])";
+            //onlyUrlString = s.replaceAll(s,match_clean_url);
+            Pattern pattern = Pattern.compile(match_clean_url);
+
+            Matcher matcher = pattern.matcher(s);
+            //input = input.replaceAll(s, onlyUrlString);
+            if (matcher.find()) {
+                String theGroup = matcher.group(0);
+                System.out.println(theGroup);
+                theGroup = theGroup.replaceAll("\"","");
+                input = input.replace(s, theGroup);
+            }
+
+        }
+        return input;
     }
 }

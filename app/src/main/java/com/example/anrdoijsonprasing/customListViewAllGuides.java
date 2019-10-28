@@ -18,6 +18,7 @@ import java.util.HashMap;
 public class customListViewAllGuides extends BaseAdapter {
 
     private Context mContext;
+    private Context mMainActivityContext;
     /// the hashMap let you create key for each string
     /// example {key , value } => (1 , "bob")
     private ArrayList<HashMap<String, String>> guidesListReceived;
@@ -25,10 +26,10 @@ public class customListViewAllGuides extends BaseAdapter {
     private static LayoutInflater inflater = null;
 
 
-    public customListViewAllGuides(Context context, ArrayList<HashMap<String, String>> temp_data) {
+    public customListViewAllGuides(Context context, ArrayList<HashMap<String, String>> temp_data, Context activity_context) {
 
-        mContext = context;
-
+        this.mContext = context;
+        this.mMainActivityContext = activity_context;
         guidesListReceived = temp_data;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -64,37 +65,33 @@ public class customListViewAllGuides extends BaseAdapter {
         }
         TextView item_id = view.findViewById(R.id.get_item_id);
         TextView title = view.findViewById(R.id.title);
-        TextView author = view.findViewById(R.id.author);
+        TextView sub_title = view.findViewById(R.id.sub_title);
         TextView pages = view.findViewById(R.id.pages);
         ImageView image = view.findViewById(R.id.list_img);
-        title.setText(json_object.get("title"));
-        author.setText(json_object.get("subtitle"));
+        String temp_title = (json_object.get("title"));
+        if (mMainActivityContext instanceof MainActivity) {
+            temp_title = ((MainActivity) mMainActivityContext).fixChars(temp_title);
+        }
+        String temp_sub_title = json_object.get("subtitle");
+        if (mMainActivityContext instanceof MainActivity) {
+            temp_sub_title = ((MainActivity) mMainActivityContext).fixChars(temp_sub_title);
+        }
+        title.setText(temp_title);
+        sub_title.setText(temp_sub_title);
         pages.setText(json_object.get("pages"));
         item_id.setText(json_object.get("id"));
 
-        final String imgURL = fixImageUrl(json_object.get("image"));
+        final String imgURL = ((MainActivity) mMainActivityContext).fixImageUrl(json_object.get("image"));
         Picasso.with(view.getContext()).load(imgURL).error(android.R.drawable.sym_contact_card).placeholder(android.R.drawable.sym_contact_card).into(image);
         return view;
     }
-
-
- /*   public String[] test(ArrayList a) {
-
-        String[] tempA = new String[a.size()];
-        for (int x = 0; x < a.size(); x++) {
-            tempA[x] = ((MainActivity) this.getActivity()).fixImageUrl(((HashMap) a.get(x)).get("image").toString());
-            //tempA[x] = a.get(0).toString();
-        }
-        return tempA;
-    }*/
 
 
     public void loadImage(String url, ImageView imageView) {
         Picasso.with(imageView.getContext()).load(url).into(imageView);
     }
 
-    public String fixImageUrl(String bad_string) {
-
+/*    public String fixImageUrl(String bad_string) {
         String fixed_string = bad_string;
         fixed_string = fixed_string.replaceAll("\\[", "");
         fixed_string = fixed_string.replaceAll("]", "");
@@ -103,6 +100,6 @@ public class customListViewAllGuides extends BaseAdapter {
         //  fixed_string = fixed_string.replaceAll("\\/", "\\");
         fixed_string = "http://justdo.co.il/" + fixed_string;
         return fixed_string;
-    }
+    }*/
 
 }
